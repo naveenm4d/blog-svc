@@ -16,7 +16,7 @@ import (
 	"github.com/naveenm4d/blog-svc/internal/handlers"
 	"github.com/naveenm4d/blog-svc/proto"
 
-	"github.com/naveenm4d/blog/backend/pkg/mongodb"
+	"github.com/naveenm4d/pkg/mongodb"
 )
 
 var (

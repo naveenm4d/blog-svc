@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option go_package = "github.com/naveenm4d/blogs-svc/proto";
+
+package tags.svc;
+
+service BlogsSvc {
+    rpc GetPosts (GetPostsRequest) returns (GetPostsResponse);
+    rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
+}
+
+enum PostStatus {
+    Undefined = 0;
+    Drafted = 1;
+    Published = 2;
+    Archived = 3;
+}
+
+message Post {
+    string id = 1;
+    string author_id = 2;
+
+    string slug = 3;
+    string title = 4;
+    string content = 5;
+    PostStatus status = 6;
+
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+message GetPostsRequest {}
+
+message GetPostsResponse {
+    repeated Post posts = 1;
+}
+
+message CreatePostRequest {
+    string id = 1;
+    string author_id = 2;
+    string slug = 3;
+    string title = 4;
+    string content = 5;
+    PostStatus status = 6;
+}
+
+message CreatePostResponse {
+    bool success = 1;
+    optional string message = 2;
+}

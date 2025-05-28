@@ -2,11 +2,9 @@ module github.com/naveenm4d/blog-svc
 
 go 1.24.2
 
-replace github.com/naveenm4d/blog/backend/pkg => ../pkg
-
 require (
 	github.com/google/uuid v1.6.0
-	github.com/naveenm4d/blog/backend/pkg v0.0.0-00010101000000-000000000000
+	github.com/naveenm4d/pkg v1.0.0-alpha
 	github.com/spf13/pflag v1.0.6
 	go.mongodb.org/mongo-driver/v2 v2.2.0
 	google.golang.org/grpc v1.72.0
