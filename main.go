@@ -57,7 +57,7 @@ func main() {
 			Collection(*config.Config.MongoPostsCollection))
 
 	fmt.Println("Initializing service...")
-	postsService := services.NewPostsService(repository)
+	postsService := services.NewPostService(repository)
 
 	fmt.Println("Initializing handler...")
 	handler := handlers.NewHandler(postsService)
@@ -70,7 +70,7 @@ func main() {
 	fmt.Println("Initializing grpc server...")
 	grpcServer = grpc.NewServer()
 
-	proto.RegisterBlogsSvcServer(grpcServer, handler)
+	proto.RegisterBlogSvcServer(grpcServer, handler)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		fmt.Printf("failed to serve: %v", err)

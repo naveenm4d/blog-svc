@@ -14,13 +14,13 @@ import (
 var _ = adapters.Handler(&server{})
 
 type server struct {
-	proto.BlogsSvcServer
+	proto.BlogSvcServer
 
-	postsService adapters.PostsService
+	postsService adapters.PostService
 }
 
 func NewHandler(
-	postsService adapters.PostsService,
+	postsService adapters.PostService,
 ) adapters.Handler {
 	server := &server{
 		postsService: postsService,

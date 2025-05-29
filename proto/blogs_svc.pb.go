@@ -425,8 +425,8 @@ const file_proto_blogs_svc_proto_rawDesc = "" +
 	"\tUndefined\x10\x00\x12\v\n" +
 	"\aDrafted\x10\x01\x12\r\n" +
 	"\tPublished\x10\x02\x12\f\n" +
-	"\bArchived\x10\x032\x96\x01\n" +
-	"\bBlogsSvc\x12A\n" +
+	"\bArchived\x10\x032\x95\x01\n" +
+	"\aBlogSvc\x12A\n" +
 	"\bGetPosts\x12\x19.tags.svc.GetPostsRequest\x1a\x1a.tags.svc.GetPostsResponse\x12G\n" +
 	"\n" +
 	"CreatePost\x12\x1b.tags.svc.CreatePostRequest\x1a\x1c.tags.svc.CreatePostResponseB&Z$github.com/naveenm4d/blogs-svc/protob\x06proto3"
@@ -457,10 +457,10 @@ var file_proto_blogs_svc_proto_depIdxs = []int32{
 	0, // 0: tags.svc.Post.status:type_name -> tags.svc.PostStatus
 	1, // 1: tags.svc.GetPostsResponse.posts:type_name -> tags.svc.Post
 	0, // 2: tags.svc.CreatePostRequest.status:type_name -> tags.svc.PostStatus
-	2, // 3: tags.svc.BlogsSvc.GetPosts:input_type -> tags.svc.GetPostsRequest
-	4, // 4: tags.svc.BlogsSvc.CreatePost:input_type -> tags.svc.CreatePostRequest
-	3, // 5: tags.svc.BlogsSvc.GetPosts:output_type -> tags.svc.GetPostsResponse
-	5, // 6: tags.svc.BlogsSvc.CreatePost:output_type -> tags.svc.CreatePostResponse
+	2, // 3: tags.svc.BlogSvc.GetPosts:input_type -> tags.svc.GetPostsRequest
+	4, // 4: tags.svc.BlogSvc.CreatePost:input_type -> tags.svc.CreatePostRequest
+	3, // 5: tags.svc.BlogSvc.GetPosts:output_type -> tags.svc.GetPostsResponse
+	5, // 6: tags.svc.BlogSvc.CreatePost:output_type -> tags.svc.CreatePostResponse
 	5, // [5:7] is the sub-list for method output_type
 	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

@@ -5,5 +5,5 @@ import (
 )
 
 type Handler interface {
-	proto.BlogsSvcServer
+	proto.BlogSvcServer
 }

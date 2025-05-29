@@ -7,28 +7,28 @@ import (
 	"github.com/naveenm4d/blog-svc/internal/core/entities"
 )
 
-var _ = adapters.PostsService(&postsService{})
+var _ = adapters.PostService(&postService{})
 
-type postsService struct {
+type postService struct {
 	postsRepository adapters.PostsRepository
 }
 
-func NewPostsService(postsRepository adapters.PostsRepository) adapters.PostsService {
-	service := &postsService{
+func NewPostService(postsRepository adapters.PostsRepository) adapters.PostService {
+	service := &postService{
 		postsRepository: postsRepository,
 	}
 
 	return service
 }
 
-func (s *postsService) CreatePost(
+func (s *postService) CreatePost(
 	ctx context.Context,
 	post *entities.Post,
 ) error {
 	return s.postsRepository.CreatePost(ctx, post)
 }
 
-func (s *postsService) GetPosts(
+func (s *postService) GetPosts(
 	ctx context.Context,
 ) ([]*entities.Post, error) {
 	return s.postsRepository.GetPosts(ctx)

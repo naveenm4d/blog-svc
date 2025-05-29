@@ -19,139 +19,139 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	BlogsSvc_GetPosts_FullMethodName   = "/tags.svc.BlogsSvc/GetPosts"
-	BlogsSvc_CreatePost_FullMethodName = "/tags.svc.BlogsSvc/CreatePost"
+	BlogSvc_GetPosts_FullMethodName   = "/tags.svc.BlogSvc/GetPosts"
+	BlogSvc_CreatePost_FullMethodName = "/tags.svc.BlogSvc/CreatePost"
 )
 
-// BlogsSvcClient is the client API for BlogsSvc service.
+// BlogSvcClient is the client API for BlogSvc service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type BlogsSvcClient interface {
+type BlogSvcClient interface {
 	GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error)
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error)
 }
 
-type blogsSvcClient struct {
+type blogSvcClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewBlogsSvcClient(cc grpc.ClientConnInterface) BlogsSvcClient {
-	return &blogsSvcClient{cc}
+func NewBlogSvcClient(cc grpc.ClientConnInterface) BlogSvcClient {
+	return &blogSvcClient{cc}
 }
 
-func (c *blogsSvcClient) GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error) {
+func (c *blogSvcClient) GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetPostsResponse)
-	err := c.cc.Invoke(ctx, BlogsSvc_GetPosts_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, BlogSvc_GetPosts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsSvcClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error) {
+func (c *blogSvcClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreatePostResponse)
-	err := c.cc.Invoke(ctx, BlogsSvc_CreatePost_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, BlogSvc_CreatePost_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// BlogsSvcServer is the server API for BlogsSvc service.
-// All implementations must embed UnimplementedBlogsSvcServer
+// BlogSvcServer is the server API for BlogSvc service.
+// All implementations must embed UnimplementedBlogSvcServer
 // for forward compatibility.
-type BlogsSvcServer interface {
+type BlogSvcServer interface {
 	GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error)
 	CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error)
-	mustEmbedUnimplementedBlogsSvcServer()
+	mustEmbedUnimplementedBlogSvcServer()
 }
 
-// UnimplementedBlogsSvcServer must be embedded to have
+// UnimplementedBlogSvcServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedBlogsSvcServer struct{}
+type UnimplementedBlogSvcServer struct{}
 
-func (UnimplementedBlogsSvcServer) GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error) {
+func (UnimplementedBlogSvcServer) GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPosts not implemented")
 }
-func (UnimplementedBlogsSvcServer) CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error) {
+func (UnimplementedBlogSvcServer) CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePost not implemented")
 }
-func (UnimplementedBlogsSvcServer) mustEmbedUnimplementedBlogsSvcServer() {}
-func (UnimplementedBlogsSvcServer) testEmbeddedByValue()                  {}
+func (UnimplementedBlogSvcServer) mustEmbedUnimplementedBlogSvcServer() {}
+func (UnimplementedBlogSvcServer) testEmbeddedByValue()                 {}
 
-// UnsafeBlogsSvcServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BlogsSvcServer will
+// UnsafeBlogSvcServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BlogSvcServer will
 // result in compilation errors.
-type UnsafeBlogsSvcServer interface {
-	mustEmbedUnimplementedBlogsSvcServer()
+type UnsafeBlogSvcServer interface {
+	mustEmbedUnimplementedBlogSvcServer()
 }
 
-func RegisterBlogsSvcServer(s grpc.ServiceRegistrar, srv BlogsSvcServer) {
-	// If the following call pancis, it indicates UnimplementedBlogsSvcServer was
+func RegisterBlogSvcServer(s grpc.ServiceRegistrar, srv BlogSvcServer) {
+	// If the following call pancis, it indicates UnimplementedBlogSvcServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&BlogsSvc_ServiceDesc, srv)
+	s.RegisterService(&BlogSvc_ServiceDesc, srv)
 }
 
-func _BlogsSvc_GetPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogSvc_GetPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPostsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsSvcServer).GetPosts(ctx, in)
+		return srv.(BlogSvcServer).GetPosts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsSvc_GetPosts_FullMethodName,
+		FullMethod: BlogSvc_GetPosts_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsSvcServer).GetPosts(ctx, req.(*GetPostsRequest))
+		return srv.(BlogSvcServer).GetPosts(ctx, req.(*GetPostsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsSvc_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogSvc_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreatePostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsSvcServer).CreatePost(ctx, in)
+		return srv.(BlogSvcServer).CreatePost(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsSvc_CreatePost_FullMethodName,
+		FullMethod: BlogSvc_CreatePost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsSvcServer).CreatePost(ctx, req.(*CreatePostRequest))
+		return srv.(BlogSvcServer).CreatePost(ctx, req.(*CreatePostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// BlogsSvc_ServiceDesc is the grpc.ServiceDesc for BlogsSvc service.
+// BlogSvc_ServiceDesc is the grpc.ServiceDesc for BlogSvc service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var BlogsSvc_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "tags.svc.BlogsSvc",
-	HandlerType: (*BlogsSvcServer)(nil),
+var BlogSvc_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "tags.svc.BlogSvc",
+	HandlerType: (*BlogSvcServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetPosts",
-			Handler:    _BlogsSvc_GetPosts_Handler,
+			Handler:    _BlogSvc_GetPosts_Handler,
 		},
 		{
 			MethodName: "CreatePost",
-			Handler:    _BlogsSvc_CreatePost_Handler,
+			Handler:    _BlogSvc_CreatePost_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

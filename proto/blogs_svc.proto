@@ -4,7 +4,7 @@ option go_package = "github.com/naveenm4d/blogs-svc/proto";
 
 package tags.svc;
 
-service BlogsSvc {
+service BlogSvc {
     rpc GetPosts (GetPostsRequest) returns (GetPostsResponse);
     rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
 }

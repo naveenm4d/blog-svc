@@ -19,7 +19,7 @@ var (
 
 	grpcPort = flag.String(
 		"grpc-port",
-		"5007",
+		"8001",
 		"the port to serve on")
 
 	mongoDBEndpoint = flag.String(
