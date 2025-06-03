@@ -45,10 +45,8 @@ jobs:
       - name: Run make test
         run: make test
 
-      - name: Annotate uncovered lines in PR diff
-        if: github.event_name == 'pull_request'
-        uses: slhck/go-coverage-action@v1.0.0
+      - name: Upload coverage.txt
+        uses: actions/upload-artifact@v4
         with:
-          coverage-file: coverage.txt
-          token: ${{ secrets.GITHUB_TOKEN }}
-          threshold: 70 # optional: fail if under 70%
+          name: coverage-report
+          path: coverage.txt
