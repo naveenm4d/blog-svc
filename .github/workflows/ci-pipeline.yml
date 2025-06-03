@@ -1,4 +1,4 @@
-name: Golang Lint
+name: CI/CD Pipeline
 
 on:
   push:
