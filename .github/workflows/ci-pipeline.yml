@@ -44,3 +44,11 @@ jobs:
 
       - name: Run make test
         run: make test
+
+      - name: Annotate uncovered lines in PR diff
+        if: github.event_name == 'pull_request'
+        uses: romycode/coverage-diff@v2
+        with:
+          coverage-file: coverage.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
