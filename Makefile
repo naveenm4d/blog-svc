@@ -14,3 +14,6 @@ lint:
 
 run: build
 	./build/${BIN}
+
+test:
+	go test ./... -tags musl -coverprofile=coverage.txt -covermode count
