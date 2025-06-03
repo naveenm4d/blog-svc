@@ -3,7 +3,7 @@ name: Golang Lint
 on:
   push:
     branches:
-      - '**'  # Run on every branch
+      - "**"
   pull_request:
     branches:
       - main
@@ -11,7 +11,7 @@ on:
 
 jobs:
   lint:
-    name: Run golangci-lint
+    name: Run Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -21,9 +21,26 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'  
+          go-version: "1.24"
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
           version: v2.1.5
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Run make test
+        run: make test
