@@ -27,6 +27,10 @@ jobs:
         uses: golangci/golangci-lint-action@v8
         with:
           version: v2.1.5
+          args: "" # disables the default 'golangci-lint run'
+
+      - name: Run make lint
+        run: make lint
 
   test:
     name: Run Tests
