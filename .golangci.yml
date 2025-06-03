@@ -109,14 +109,14 @@ linters:
     - zerologlint
   # Disable specific linter.
   # https://golangci-lint.run/usage/linters/#disabled-by-default
-  disable:
+  # disable:
 
   # All available settings of specific linters.
   settings:
     funlen:
       lines: 120
     # See the dedicated "linters.settings" documentation section.
-    option: value
+    # option: value
   # Defines a set of rules to ignore issues.
   # It does not skip the analysis, and so does not ignore "typecheck" errors.
   exclusions:
