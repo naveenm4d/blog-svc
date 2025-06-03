@@ -43,7 +43,9 @@ func main() {
 	}()
 
 	fmt.Println("Initializing mongo connection...")
+
 	mongoClient, mErr := mongodb.CreateMongoClient(ctx, *config.Config.MongoDBEndpoint)
+
 	if mErr != nil {
 		panic(mErr)
 	}
@@ -51,15 +53,18 @@ func main() {
 	defer mongoClient.Disconnect(ctx)
 
 	fmt.Println("Initializing repository...")
+
 	repository := repositories.NewPostsRepository(
 		mongoClient.
 			Database(*config.Config.MongoDBDatabase).
 			Collection(*config.Config.MongoPostsCollection))
 
 	fmt.Println("Initializing service...")
+
 	postsService := services.NewPostService(repository)
 
 	fmt.Println("Initializing handler...")
+
 	handler := handlers.NewHandler(postsService)
 
 	lis, lErr := net.Listen("tcp", fmt.Sprintf(":%s", *config.Config.GrpcPort))
@@ -68,6 +73,7 @@ func main() {
 	}
 
 	fmt.Println("Initializing grpc server...")
+
 	grpcServer = grpc.NewServer()
 
 	proto.RegisterBlogSvcServer(grpcServer, handler)

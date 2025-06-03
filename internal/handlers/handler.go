@@ -31,7 +31,7 @@ func NewHandler(
 
 func (s *server) GetPosts(
 	ctx context.Context,
-	request *proto.GetPostsRequest,
+	request *proto.GetPostsRequest, //nolint:revive
 ) (*proto.GetPostsResponse, error) {
 	posts, err := s.postsService.GetPosts(ctx)
 	if err != nil {
