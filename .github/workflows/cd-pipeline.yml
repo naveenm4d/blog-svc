@@ -36,7 +36,7 @@ jobs:
           echo "Running from branch: $BRANCH"
 
           if [[ "$ENVIRONMENT" == "Kraken" && "$BRANCH" != "main" ]]; then
-            echo "::error Cannot release unstable branches to production."
+            echo "Error: Cannot release unstable branches to production."
             exit 1
           fi
 
@@ -73,7 +73,7 @@ jobs:
       - name: Build Docker image
         run: |
           TAG=${{ steps.tag.outputs.tag }}
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-svc:$TAG"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:blog-svc-$TAG"
 
           echo "Building Docker image: $IMAGE"
           docker build -t $IMAGE .
@@ -81,7 +81,7 @@ jobs:
       - name: Push Docker image
         run: |
           TAG=${{ steps.tag.outputs.tag }}
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-svc:$TAG"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:blog-svc-$TAG"
 
           echo "Pushing Docker image: $IMAGE"
           docker push $IMAGE
