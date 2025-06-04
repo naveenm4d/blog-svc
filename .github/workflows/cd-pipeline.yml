@@ -1,0 +1,92 @@
+name: Build & Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment'
+        required: true
+        type: choice
+        options:
+          - Phoenix
+          - Kraken
+      branch:
+        description: 'Branch name'
+        required: true
+      tag:
+        description: 'Tag (must exist on branch)'
+        required: true
+
+jobs:
+  build:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate environment and branch
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          BRANCH="${{ github.event.inputs.branch }}"
+
+          if [[ -z "$BRANCH" ]]; then
+            echo "Error: Branch is required."
+            exit 1
+          fi
+
+          if [[ "$ENV" == "Kraken" && "$BRANCH" != "main" ]]; then
+            echo "Error: Cannot release unstable branches to production."
+            exit 1
+          fi
+
+      - name: Validate tag exists on branch
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          BRANCH="${{ github.event.inputs.branch }}"
+
+          if ! git rev-parse "$TAG^{tag}" >/dev/null 2>&1; then
+            echo "Error: Tag '$TAG' does not exist."
+            exit 1
+          fi
+
+          TAG_COMMIT=$(git rev-list -n 1 $TAG)
+          if ! git merge-base --is-ancestor $TAG_COMMIT $BRANCH; then
+            echo "Error: Tag '$TAG' is not on branch '$BRANCH'."
+            exit 1
+          fi
+
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.21
+
+      - name: Run make build
+        run: make build
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:${{ github.event.inputs.tag }}"
+          echo "Building Docker image: $IMAGE"
+          docker build -t $IMAGE .
+
+      - name: Push Docker image
+        run: |
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:${{ github.event.inputs.tag }}"
+          echo "Pushing Docker image: $IMAGE"
+          docker push $IMAGE

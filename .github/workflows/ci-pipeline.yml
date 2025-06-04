@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Validation & Versioning
 
 on:
   push:
