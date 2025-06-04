@@ -73,7 +73,7 @@ jobs:
       - name: Build Docker image
         run: |
           TAG=${{ steps.tag.outputs.tag }}
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:$TAG"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-svc:$TAG"
 
           echo "Building Docker image: $IMAGE"
           docker build -t $IMAGE .
@@ -81,7 +81,7 @@ jobs:
       - name: Push Docker image
         run: |
           TAG=${{ steps.tag.outputs.tag }}
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:$TAG"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-svc:$TAG"
 
           echo "Pushing Docker image: $IMAGE"
           docker push $IMAGE
