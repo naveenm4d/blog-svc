@@ -4,17 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select environment'
+        description: "Select environment"
         required: true
         type: choice
         options:
           - Phoenix
           - Kraken
       branch:
-        description: 'Branch name'
+        description: "Branch name"
         required: true
       tag:
-        description: 'Tag (must exist on branch)'
+        description: "Tag (must exist on branch)"
         required: true
 
 jobs:
@@ -28,42 +28,39 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate environment and branch
+      - name: Get current branch name
+        id: branch
+        run: echo "name=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate environment vs. branch
         run: |
           ENV="${{ github.event.inputs.environment }}"
-          BRANCH="${{ github.event.inputs.branch }}"
+          BRANCH="${{ github.ref_name }}"
 
-          if [[ -z "$BRANCH" ]]; then
-            echo "Error: Branch is required."
-            exit 1
-          fi
+          echo "Selected environment: $ENV"
+          echo "Running from branch: $BRANCH"
 
           if [[ "$ENV" == "Kraken" && "$BRANCH" != "main" ]]; then
             echo "Error: Cannot release unstable branches to production."
             exit 1
           fi
 
-      - name: Validate tag exists on branch
+      - name: Get tag or generate pseudo-tag for feature branches
+        id: tag
         run: |
-          TAG="${{ github.event.inputs.tag }}"
-          BRANCH="${{ github.event.inputs.branch }}"
+          git fetch --tags
+          BRANCH="${{ github.ref_name }}"
 
-          if ! git rev-parse "$TAG^{tag}" >/dev/null 2>&1; then
-            echo "Error: Tag '$TAG' does not exist."
-            exit 1
+          if [[ "$BRANCH" == "main" || "$BRANCH" == "develop" ]]; then
+            TAG=$(git describe --tags --abbrev=0)
+          else
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            SAFE_BRANCH=$(echo "$BRANCH" | tr '/' '-')
+            TAG="${SAFE_BRANCH}-${SHORT_SHA}"
           fi
 
-          TAG_COMMIT=$(git rev-list -n 1 $TAG)
-          if ! git merge-base --is-ancestor $TAG_COMMIT $BRANCH; then
-            echo "Error: Tag '$TAG' is not on branch '$BRANCH'."
-            exit 1
-          fi
-
-      - name: Checkout selected branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
-          fetch-depth: 0
+          echo "Using tag: $TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -81,12 +78,16 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:${{ github.event.inputs.tag }}"
+          TAG=${{ steps.tag.outputs.tag }}
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:$TAG"
+
           echo "Building Docker image: $IMAGE"
           docker build -t $IMAGE .
 
       - name: Push Docker image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:${{ github.event.inputs.tag }}"
+          TAG=${{ steps.tag.outputs.tag }}
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:$TAG"
+
           echo "Pushing Docker image: $IMAGE"
           docker push $IMAGE

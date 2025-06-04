@@ -72,12 +72,9 @@ jobs:
       - name: Increment version
         id: bump
         run: |
-          RAW_VERSION="${{ steps.read_version.outputs.version }}"
+          VERSION="${{ steps.read_version.outputs.version }}"
 
-          # Remove pre-release suffix if present
-          CLEAN_VERSION="${RAW_VERSION%%-*}"
-
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$CLEAN_VERSION"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
           PATCH=$((PATCH + 1))
 
           if [[ "${{ steps.branch.outputs.branch_name }}" == "develop" ]]; then
@@ -89,7 +86,12 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Update version.txt
-        run: echo "${{ steps.bump.outputs.new_version }}" > version.txt
+        run: |
+          RAW_VERSION="${{ steps.read_version.outputs.new_version }}"
+          # Remove pre-release suffix if present
+          CLEAN_VERSION="${RAW_VERSION%%-*}"
+
+          echo "$CLEAN_VERSION" > version.txt
 
       - name: Commit updated version.txt
         run: |
