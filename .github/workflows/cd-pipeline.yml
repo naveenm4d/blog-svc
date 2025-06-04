@@ -15,6 +15,8 @@ jobs:
   build:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout repo
@@ -67,8 +69,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets[format('DOCKERHUB_USERNAME_{0}', env.ENVIRONMENT | toUpperCase())] }}
+          password: ${{ secrets[format('DOCKERHUB_TOKEN_{0}', env.ENVIRONMENT | toUpperCase())] }}
 
       - name: Build Docker image
         run: |
