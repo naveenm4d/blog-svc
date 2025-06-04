@@ -36,7 +36,7 @@ jobs:
           echo "Running from branch: $BRANCH"
 
           if [[ "$ENVIRONMENT" == "Kraken" && "$BRANCH" != "main" ]]; then
-            echo "::error Cannot release unstable branches to production."
+            echo "Error: Cannot release unstable branches to production."
             exit 1
           fi
 
