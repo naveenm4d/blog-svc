@@ -66,19 +66,11 @@ jobs:
       - name: Run make build
         run: make build
 
-      - name: Docker Login for Phoenix
-        if: ${{ github.event.inputs.environment == 'Phoenix' }}
+      - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME_PHOENIX }}
-          password: ${{ secrets.DOCKERHUB_TOKEN_PHOENIX }}
-
-      - name: Docker Login for Kraken
-        if: ${{ github.event.inputs.environment == 'Kraken' }}
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME_KRAKEN }}
-          password: ${{ secrets.DOCKERHUB_TOKEN_KRAKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
         run: |
