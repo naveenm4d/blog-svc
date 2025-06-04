@@ -10,12 +10,6 @@ on:
         options:
           - Phoenix
           - Kraken
-      branch:
-        description: "Branch name"
-        required: true
-      tag:
-        description: "Tag (must exist on branch)"
-        required: true
 
 jobs:
   build:
