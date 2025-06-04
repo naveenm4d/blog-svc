@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
+      BRANCH: ${{ github.ref_name }}
 
     steps:
       - name: Checkout repo
@@ -30,13 +31,10 @@ jobs:
 
       - name: Validate environment vs. branch
         run: |
-          ENV="${{ github.event.inputs.environment }}"
-          BRANCH="${{ github.ref_name }}"
-
-          echo "Selected environment: $ENV"
+          echo "Selected environment: $ENVIRONMENT"
           echo "Running from branch: $BRANCH"
 
-          if [[ "$ENV" == "Kraken" && "$BRANCH" != "main" ]]; then
+          if [[ "$ENVIRONMENT" == "Kraken" && "$BRANCH" != "main" ]]; then
             echo "Error: Cannot release unstable branches to production."
             exit 1
           fi
@@ -45,7 +43,6 @@ jobs:
         id: tag
         run: |
           git fetch --tags
-          BRANCH="${{ github.ref_name }}"
 
           if [[ "$BRANCH" == "main" || "$BRANCH" == "develop" ]]; then
             TAG=$(git describe --tags --abbrev=0)
@@ -57,6 +54,7 @@ jobs:
 
           echo "Using tag: $TAG"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Docker username - ${{ secrets.DOCKERHUB_USERNAME }}"
 
       - name: Set up Go
         uses: actions/setup-go@v5
