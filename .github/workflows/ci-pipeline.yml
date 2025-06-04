@@ -44,3 +44,62 @@ jobs:
 
       - name: Run make test
         run: make test
+
+  tag:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    name: Tag version
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current branch
+        id: branch
+        run: |
+          echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      - name: Read current version
+        id: read_version
+        run: |
+          version=$(cat version.txt)
+          echo "Current version: $version"
+          echo "version=${version#v}" >> $GITHUB_OUTPUT
+
+      - name: Increment version
+        id: bump
+        run: |
+          RAW_VERSION="${{ steps.read_version.outputs.version }}"
+
+          # Remove pre-release suffix if present
+          CLEAN_VERSION="${RAW_VERSION%%-*}"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CLEAN_VERSION"
+          PATCH=$((PATCH + 1))
+
+          if [[ "${{ steps.branch.outputs.branch_name }}" == "develop" ]]; then
+            NEW_VERSION="v$MAJOR.$MINOR.$PATCH-alpha"
+          else
+            NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version.txt
+        run: echo "${{ steps.bump.outputs.new_version }}" > version.txt
+
+      - name: Commit updated version.txt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add version.txt
+          git commit -m "Bump version to ${{ steps.bump.outputs.new_version }}"
+          git push
+
+      - name: Tag the commit
+        run: |
+          git tag -a "${{ steps.bump.outputs.new_version }}" -m "Release ${{ steps.bump.outputs.new_version }}"
+          git push origin "${{ steps.bump.outputs.new_version }}"
