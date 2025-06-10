@@ -76,7 +76,6 @@ jobs:
           CLEAN_VERSION="${RAW_VERSION%%-*}"
 
           IFS='.' read -r MAJOR MINOR PATCH <<< "$CLEAN_VERSION"
-          PATCH=$((PATCH + 1))
 
           if [[ "${{ steps.branch.outputs.branch_name }}" == "develop" ]]; then
             # Count existing dev tags
@@ -84,6 +83,7 @@ jobs:
             DEV_SUFFIX=$((COUNT + 1))
             NEW_VERSION="v$MAJOR.$MINOR.$PATCH-dev.$DEV_SUFFIX"
           else
+            PATCH=$((PATCH + 1))
             NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
           fi
 
