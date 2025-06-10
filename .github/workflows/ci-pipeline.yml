@@ -79,7 +79,10 @@ jobs:
           PATCH=$((PATCH + 1))
 
           if [[ "${{ steps.branch.outputs.branch_name }}" == "develop" ]]; then
-            NEW_VERSION="v$MAJOR.$MINOR.$PATCH-alpha"
+            # Count existing dev tags
+            COUNT=$(git tag --list "v$MAJOR.$MINOR.$PATCH-dev.*" | wc -l)
+            DEV_SUFFIX=$((COUNT + 1))
+            NEW_VERSION="v$MAJOR.$MINOR.$PATCH-dev.$DEV_SUFFIX"
           else
             NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
           fi
