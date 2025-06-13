@@ -79,4 +79,4 @@ jobs:
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/blog-app:blog-svc-$TAG"
 
           echo "Building Docker image: $IMAGE"
-          docker buildx build --platform linux/amd64,linux/arm64 --push --tag $IMAGE .
+          docker buildx build --platform linux/arm64 --push --tag $IMAGE .
