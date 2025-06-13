@@ -1,10 +1,11 @@
 BIN?=blog-svc
+REGISTRY?=localhost
 
 default: run
 .PHONY : build run
 
 build:
-	go build -o build/${BIN}
+	GOOS=linux GOARCH=arm64 go build -o build/${BIN}
 
 build-proto:
 	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative --experimental_allow_proto3_optional proto/blogs_svc.proto
@@ -21,3 +22,7 @@ run: build
 
 test:
 	go test ./... -tags musl -coverprofile=coverage.txt -covermode count
+
+docker-build:
+	docker buildx build --no-cache --build-arg BIN=${BIN} --platform linux/arm64 -t ${BIN} --load .
+	docker tag ${BIN} ${REGISTRY}/${BIN}
