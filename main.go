@@ -15,6 +15,8 @@ import (
 	"github.com/naveenm4d/blog-svc/internal/config"
 	"github.com/naveenm4d/blog-svc/internal/handlers"
 	"github.com/naveenm4d/blog-svc/proto"
+	health "google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/naveenm4d/pkg/mongodb"
 )
@@ -75,6 +77,10 @@ func main() {
 	fmt.Println("Initializing grpc server...")
 
 	grpcServer = grpc.NewServer()
+
+	healthServer := health.NewServer()
+	healthpb.RegisterHealthServer(grpcServer, healthServer)
+	healthServer.SetServingStatus("blog-svc", healthpb.HealthCheckResponse_SERVING)
 
 	proto.RegisterBlogSvcServer(grpcServer, handler)
 
